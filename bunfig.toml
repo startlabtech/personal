@@ -1,0 +1,2 @@
+[install.scopes]
+"@startlab" = { token = "$NPM_TOKEN", url = "https://registry.npmjs.com/" }

@@ -193,17 +193,29 @@ export default function typographyStyles({ theme }: PluginUtils) {
           marginBottom: theme('spacing.3'),
         },
 
+        '.code-block': {
+          color: 'var(--tw-prose-pre-code)',
+          border: '1px solid',
+          borderColor: theme('colors.zinc.800'),
+          borderRadius: theme('borderRadius.lg'),
+          overflow: 'hidden',
+          backgroundColor: 'var(--tw-prose-pre-bg)',
+        },
+        '.code-block .rehype-code-title ': {
+          borderBottom: '1px solid',
+          borderColor: theme('colors.zinc.800'),
+          padding: theme('spacing.2'),
+          paddingLeft: theme('spacing.4'),
+          fontSize: theme('fontSize.sm')[0],
+          backgroundColor: 'var(--tw-prose-pre-bg)',
+        },
         // Code blocks
         pre: {
           color: 'var(--tw-prose-pre-code)',
           fontSize: theme('fontSize.sm')[0],
           fontWeight: theme('fontWeight.medium'),
-          backgroundColor: 'var(--tw-prose-pre-bg)',
-          borderRadius: theme('borderRadius.3xl'),
-          padding: theme('spacing.8'),
+          padding: theme('spacing.4'),
           overflowX: 'auto',
-          border: '1px solid',
-          borderColor: 'var(--tw-prose-pre-border)',
         },
         'pre code': {
           display: 'inline',

@@ -10,13 +10,14 @@ export async function GET(req: Request) {
   }
 
   let author = {
-    name: 'Spencer Sharp',
-    email: 'spencer@planetaria.tech',
+    name: 'Max',
+    email: 'max@startlab.tech',
   }
 
   let feed = new Feed({
     title: author.name,
-    description: 'Your blog description',
+    description:
+      'Writing on software design, engineering, and AI. All of my long-form thoughts on programming, desiging scalable solutions, AI and more, collected in chronological order.',
     author,
     id: siteUrl,
     link: siteUrl,

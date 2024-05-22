@@ -1,0 +1,74 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Max',
+  date: '2024-05-22',
+  title: 'Advanced Delayed Event Processing with AWS',
+  description: `Have you ever needed to delay the processing of an event for a certain number of hours but found that no single AWS service could handle this for you? Perhaps you wanted to avoid managing CRON jobs and batch processing to achieve this delay.`,
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+In many software applications, there is a need to delay the processing of events. This might involve sending notifications at a set time after user actions, executing tasks at a later date, or managing message traffic during peak periods. Although essential, setting up delayed event processing using cloud services like Amazon Web Services (AWS) can be complex due to the limitations of the available tools.
+
+This article explores different AWS services that facilitate delayed event processing, discussing both their capabilities and their limitations. I also propose a solution that integrates several AWS services, including Amazon Simple Queue Service (SQS), DynamoDB, and AWS Lambda, to create a more effective system for handling delays in event processing.
+
+The following sections will detail these services and the architectural approach I recommend for implementing delayed event processing in AWS environments.
+
+## Requirement
+
+Ability to delay the processing of an event for a specified duration, ranging from seconds, minutes, hours, and days to weeks, months, and even years.
+
+## Native AWS Capabilities for delaying an event
+
+### SQS
+
+Amazon Simple Queue Service (SQS) allows you to delay an event by setting a delay period, which postpones the delivery of messages to the queue.
+
+**Limitations:** The maximum delay period is 15 minutes (900 seconds). Messages cannot be delayed for more than this duration.
+
+### DynamoDB
+
+DynamoDB enables you to set a Time-to-Live (TTL) for automatically expiring items from your tables after a specified timestamp. This feature can be used to trigger an event when an item expires.
+
+**Limitations:** TTL in DynamoDB does not guarantee immediate deletion. There can be a delay of up to 48 hours before the item is actually removed.
+
+### S3
+
+Unlike DynamoDB, AWS S3 does not have a built-in TTL feature. However, you can utilize S3 Object Lifecycle Management in combination with other AWS services to achieve a similar effect.
+
+**Limitations:** There may be a delay between the object's expiration and the actual deletion, as S3 lifecycle rules are not guaranteed to run immediately at the specified time.
+
+### Others
+
+Other possibilities with their own limitations or complexities include:
+
+- **Step Functions:** This service could be used to schedule a function for every delayed event you want to process, but it would add a significant layer of complexity.
+- **Managed Kafka:** While it offers delayed event processing as a native feature, it can be a costly solution and still requires you to manage certain aspects of the Kafka cluster.
+
+Each of these services provides mechanisms for delaying event processing but comes with specific limitations. In the following sections, I will introduce a high-level architecture that might offer a more streamlined solution.
+
+## High-Level Architectural Solution
+
+While AWS SQS does not fully meet our requirements due to its 15-minute delay limitation, it can serve as a robust foundation for a more comprehensive solution.
+
+To accommodate events that need to be delayed for more than 15 minutes, I require a datastore capable of maintaining these events until their scheduled processing time. DynamoDB is well-suited for this role, as it allows us to create an index that efficiently identifies all events scheduled for processing. Additionally, DynamoDB can handle event structures of various shapes, adding to its versatility.
+
+Since SQS limits delays to 15 minutes, I must regularly query the datastore to identify events that are due to be triggered within the next 15 minutes. This can be accomplished using AWS Lambda, triggered at specified intervals by AWS EventBridge.
+
+The AWS Lambda function will be responsible for querying the datastore to find and identify the events that are due for triggering. It will then publish these events to the SQS queue, applying a calculated delay appropriate to the timing requirements of each event.
+
+## Detailed Implementation Strategies
+
+When implementing this solution, several key considerations must be addressed to ensure efficient operation and timely event processing:
+
+- **Index Structure:** I need to define an index structure that allows us to efficiently query for all events scheduled within a specific time window. Directly querying DynamoDB with the exact trigger times of events presents challenges due to its query limitations. To circumvent this, I should store records in DynamoDB categorized by specific batch windows corresponding to their scheduled trigger times.
+- **Batch Window Definition:** While events can be scheduled up to 15 minutes before their intended trigger time, I must consider potential processing latencies. Therefore, I recommend defining a batch window of 10 minutes. For example, events that are due between 1:20 and 1:30 would be grouped in the 1:20 batch window.
+- **Trigger Scheduling:** To account for any processing delays and ensure timely execution, it's advisable to set the AWS Lambda function to be triggered by AWS EventBridge every ten minutes, starting 8 minutes past each hour (e.g., 1:08, 1:18, 1:28, 1:38, etc.). The trigger at 1:08, for instance, would specifically query for events in the 1:10 batch window.
+- **Calculating the Event Delay:** To ensure accuracy in timing, calculate the event delay for each record just before publishing it. This approach minimizes the time shift between when the delay is calculated and when the record is actually published. Avoiding batching for this calculation ensures that each event is timed as precisely as possible.
+- **Handling Events with Less Than 15 Minutes of Delay:** For events requiring a delay of less than 15 minutes, which might miss their batch window if scheduled via DynamoDB, these should be directly scheduled with the SQS queue. This direct scheduling ensures that such short-duration events are processed timely without waiting for the next batch window.
