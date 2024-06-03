@@ -61,6 +61,11 @@ export function ArticleLayout({
             </header>
             <Prose className="mt-8" data-mdx-content>
               {children}
+              <h2>Final Note</h2>
+
+              <p>In creating these articles, I work with ChatGPT to help articulate my thoughts and structure them effectively for my target audience. This collaboration gives me the confidence to explore and write about complex tech and engineering topics, ensuring that each piece is insightful and accessible.</p>
+
+              <p><em>I plan to share these short articles on all things technology every two weeks right here. When I&apos;m not here, you can find my writing on <a href="https://www.getorchestrated.com/blog/structure-of-a-good-prompt">getorchestrated.com</a>, where I focus on helping businesses harness technology more effectively.</em></p>
             </Prose>
           </article>
         </div>

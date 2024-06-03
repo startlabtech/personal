@@ -1,0 +1,95 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Max',
+  date: '2024-06-03',
+  title: 'Protecting your frontend applications',
+  description:
+    'Learn how to enhance your frontend application security by implementing Content Security Policy (CSP) headers to prevent common vulnerabilities such as Cross-Site Scripting (XSS) and data injection.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+## Introduction
+
+As businesses intensify their efforts to secure backend systems against cyber threats, the security of frontend applications often remains underexplored. This gap in security strategy leaves organisations vulnerable to attacks that exploit client-side vulnerabilities, directly affecting end-users safety and trust. Content Security Policy (CSP) headers are a remarkably effective yet straightforward solution among the tools available to protect these frontend interfaces. CSP headers help mitigate risks associated with common vulnerabilities such as Cross-Site Scripting (XSS) and data injection attacks, which are prevalent in the digital threat landscape.
+
+Implementing CSP headers is a proactive step towards securing frontend assets and a strategic move that reinforces overall security with minimal complexity. This article will explore how CSP headers work, their benefits, and practical implementation steps in your web applications. By integrating CSP headers, companies can enhance their security measures and inspire confidence in their users, providing robust protection against the myriad of malicious activities that threaten web security today.
+
+## What are CSP Headers?
+
+Content Security Policy (CSP) headers are an essential security feature that allows you to control the sources from which our applications can load resources—specifying a list of valid origins for resources such as scripts, styles, and images. They act as a whitelist, blocking any resource from an unauthorised source, thus limiting the potential for malicious content to execute within the user's browser. CSPs are implemented via a simple policy directive in the HTTP header, making it a powerful tool in the arsenal of frontend security strategies.
+
+## The Basics of Implementing CSP Headers
+
+Implementing Content Security Policy (CSP) headers is a straightforward process that significantly boosts the security of your web applications. CSP headers provide a powerful security measure by controlling the sources from which your pages can load resources. They are usually set by including the `Content-Security-Policy` HTTP header in the response sent from the server when a web asset, like an HTML page, is requested. This header outlines the policy specifying valid resource origins, effectively restricting how and where content can be loaded.
+
+For environments where you might not have control over server-side headers or when you need to apply policies to individual pages rather than globally, CSP can also be implemented using a `<meta>` tag within the HTML document itself. This method is particularly useful for testing policies on specific pages before implementing them on the server level. However, it's important to note that using the HTTP header method is generally more secure and flexible, especially for complex applications. It covers all resources loaded by the browser, including those loaded by HTML imported using mechanisms like `<link>` or `<iframe>`.
+
+## Writing a CSP Policy
+
+Creating an effective Content Security Policy (CSP) involves specifying which sources are trustworthy for loading various types of content in your application. This is done by defining a set of directives in the policy that represents different types of resources such as scripts, images, stylesheets, and more. Each directive in the CSP can specify one or more permissible sources, such as specific URLs, a keyword like 'self' (which represents the origin from which the document is being served), a collection of `unsafe-*` directives (which allow you to control how and when you allow inline JS and the use of eval ), or 'none' (to disallow all sources for a specific resource type).
+
+To start writing a CSP, you begin with the Content-Security-Policy header, followed by the policy directives. For example, a basic CSP policy to only allow scripts and styles from the same origin and block all others might look like this:
+
+```
+Content-Security-Policy: script-src 'self'; style-src 'self';
+```
+
+This policy ensures that only scripts and CSS stylesheets are loaded from the same origin as the asset being served, blocking potentially malicious scripts or styles from external sources. Additional directives can be added to handle other resources like images, fonts, and frames, each tailored to the security needs of your specific application.
+
+When constructing a policy, carefully considering the balance between security and functionality is crucial, ensuring that legitimate content sources are not inadvertently blocked, which could impact the user experience. Testing the policy in a development environment before deployment is highly recommended to fine-tune the balance and ensure all website functionalities operate as intended under the new security restrictions.
+
+For a comprehensive understanding of CSP policies, including detailed examples of various directives, the [Mozilla Developer Network (MDN) Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) is an invaluable resource to guide you through crafting and refining your CSP implementations.
+
+## Example
+
+Here is a basic example of how easy it is to implement CSP headers in a `koa` based typescript application.
+
+<div className="code-block">
+```ts
+import Koa from 'koa';
+import Router from '@koa/router';
+
+const app = new Koa();
+const router = new Router();
+
+// CSP Middleware
+const cspMiddleware = async (ctx: Koa.Context, next: () => Promise<any>) => {
+    ctx.set('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'");
+    await next();
+};
+
+// Apply the CSP Middleware to all routes
+app.use(cspMiddleware);
+
+// Example route
+router.get('/', async (ctx) => {
+    ctx.body = 'Hello, your CSP is protecting this content!';
+});
+
+app.use(router.routes()).use(router.allowedMethods());
+
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});
+```
+</div>
+
+
+## Testing Your CSP with Reporting
+
+Using the CSP reporting feature is highly beneficial for effectively testing and monitoring the implementation of your Content Security Policy (CSP). This feature allows you to specify a `report-uri` directive in your CSP, which will send reports to a specified endpoint whenever a violation of the CSP occurs. These reports provide detailed insights into what resources were blocked and why, helping you identify and resolve potential issues in your policy.
+
+For a more in-depth understanding of setting up CSP reporting and interpreting the results, the [Mozilla Developer Network (MDN) Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP) offers a comprehensive guide on CSP reporting features. This resource includes examples and best practices to help you effectively utilise CSP reports to refine security measures. Check out the CSP Reporting documentation on MDN to explore how to set up and benefit from CSP reporting in your projects.
+
+## Conclusion
+
+Implementing Content Security Policy (CSP) headers is essential for protecting frontend applications from common vulnerabilities like Cross-Site Scripting (XSS) and data injection. Adding CSP headers through HTTP response headers or HTML meta tags is a relatively straightforward process. It allows developers to specify allowable sources for resources, enhancing web application security.
+
+In future discussions, I will consider the integration of CSP headers within cloud architectures, with a specific focus on AWS environments. I plan to cover how CSPs can be managed and defined effectively within AWS, aiming to provide a systematic approach to security that ensures both compliance and ease of management.
