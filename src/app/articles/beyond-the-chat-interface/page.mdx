@@ -1,0 +1,64 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Max',
+  date: '2024-06-12',
+  title: 'Going beyond the chat interface',
+  description:
+    'Learn how generative AI can be utilised in business systems beyond typical chat interfaces, highlighting its role as an integral component in technological infrastructures.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+## Introduction
+
+Generative AI, widely recognised for powering chat interfaces, is a form of artificial intelligence that simulates human-like interactions. While its most visible applications are in customer service bots and conversational agents, its capabilities extend far beyond these initial uses.
+
+This article looks at how businesses can integrate generative AI into broader processes.s processes. Moving past its typical role in chat interfaces, we will examine how it can transform unstructured data, assist in classification, and enhance automation processes across various operational contexts, underscoring its potential as a versatile tool in the technological toolkit of modern businesses.
+
+## Beyond Chat
+
+Generative AI extends well beyond the familiar realm of chatbots and virtual assistants. While less visible, its core capabilities are crucial for enhancing various business operations and decision-making processes. One of the fundamental strengths of generative AI is its ability to convert unstructured data—ranging from text and images to more complex data like customer interactions—into structured, actionable information. This capability allows businesses to harness vast amounts of previously untapped data due to their unorganised nature.
+
+Furthermore, generative AI excels in classification tasks. AI-assisted systems can automate tasks such as categorising customer feedback into sentiment groups, sorting documents by relevance, and identifying the next task to be completed in a process with considerable accuracy. Such classifications help businesses streamline operations, improve response times, and better understand customers.
+
+Advanced reasoning is another significant capability. By applying logic and simulating human-like reasoning, generative AI can support complex decision-making processes. For example, it can understand business processes and review each transaction, ensuring they have been followed. This level of reasoning can be instrumental in areas such as compliance and regulatory environments.
+
+## Case Study: Key information extraction
+
+Imagine a digital agency receiving multiple enquiry forms weekly through its website. Each form is filled with freeform text where potential clients describe their needs, budget, timelines, and other project specifics in a conversational manner. Traditionally, sorting through this information to extract actionable insights and respond appropriately would require significant staffing and be prone to errors and delays.
+
+Enter generative AI equipped with the capability to transform these unstructured text inputs into structured data. By deploying an AI model trained to identify and categorise critical pieces of information, the agency can automate the extraction of project requirements, budget constraints, desired timelines, and other crucial data from the text. For example, when a client mentions “budget around $5,000” or “need the project completed within three months,” the AI-assisted process can accurately capture and categorise this information into predefined fields in the agency’s project management system.
+
+## Case Study: Issue allocation
+
+Consider a software development company that utilises a project management tool like Jira to handle myriad issues ranging from simple bug fixes to complex feature requests. Each issue created in the system must be accurately assigned to the appropriate team based on its content, which can vary significantly in detail and complexity. Traditionally, this classification requires a project manager or a team lead to manually review and assign tasks, a process that can be time-consuming and subject to human error.
+
+With the integration of generative AI, the company can automate the classification of these issues. An AI model, trained on past data, can analyse the text of each new issue submitted to the system—examining keywords, technical terms, and contextual clues—to determine the most relevant team to handle the task. For example, if an issue contains terms like “UI glitch” or “responsive design,” the AI can automatically route it to the front-end team, whereas a mention of “database error” would send it to the back-end team.
+
+## Case Study: Compliance review
+
+Imagine a financial institution that processes hundreds of loan applications each month. Each application should be reviewed to ensure compliance with various regulatory standards and internal company policies, a labour-intensive process prone to human error.
+
+The institution can enhance its compliance operations by integrating generative AI into this review process. An AI-assisted system can be developed to scrutinise the details of each loan application, checking for completeness, accuracy, and adherence to regulatory requirements such as creditworthiness assessments, anti-money laundering (AML) checks, and more. For instance, if an application fails to meet specific credit score thresholds or omits necessary documentation like proof of income, the AI-assisted system can flag it automatically for further review.
+
+## Integrating AI as a component
+
+Generative AI, when viewed through a strategic lens, serves not as a standalone marvel but as an integral component in the broader technological ecosystem of a business. This perspective aligns with the deployment of foundational IT resources such as databases, cloud services, and middleware, which are rarely used in isolation but rather as part of a cohesive system architecture.
+
+The true potential of generative AI emerges when it is seamlessly integrated into existing systems, enhancing and extending their capabilities without displacing the foundational technologies that enterprises rely on. For example, in the case of the digital agency discussed earlier, generative AI transforms unstructured client inquiries into structured data, much like a database stores and organises information. Similarly, in our software development company scenario, AI acts like a sophisticated filter that smartly routes issues to the right teams, paralleling how a cloud service dynamically allocates resources based on demand. In both instances, generative AI is a component in an existing process and improves operational efficiencies across business processes.
+
+Businesses must adopt a modular approach where AI components communicate and operate within the existing digital infrastructure to integrate AI effectively.
+
+## Conclusion
+
+As explored throughout this article, generative AI holds far more potential than its mundane use in chat interfaces might suggest. From transforming unstructured data into structured insights for a digital agency to smartly routing tasks in software development to enhancing compliance reviews in financial institutions, AI is proving itself as a versatile and powerful tool across various sectors.
+
+Generative AI should not be viewed simply as a solution for automation or a novelty for customer engagement. Instead, it should be considered a critical component in the technological toolkit of any modern business, akin to databases or cloud services. This shift in perception encourages the integration of AI into core business processes, which can significantly enhance efficiency, accuracy, and decision-making capabilities.
+
+We urge businesses to look beyond conventional applications and consider how AI can be incorporated into their systems not as a standalone solution but as a part of a cohesive whole. By embracing a modular approach and understanding the full scope of AI’s capabilities, organisations can harness its power to innovate and remain competitive in a rapidly evolving digital landscape.
