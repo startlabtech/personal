@@ -1,0 +1,70 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Max',
+  date: '2024-06-17',
+  title: 'Continuous integration attack vector',
+  description:
+    'Discover the often overlooked security vulnerabilities of Continuous Integration (CI) servers and learn how robust measures like OpenID Connect and IAM roles can fortify your cloud infrastructure.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+## Introduction
+
+Continuous Integration (CI) is pivotal in modern DevOps practices. It is essential for automating the integration and testing of code changes, ensuring that new software builds are reliable and ready for deployment.
+
+By automating these processes, CI servers help teams develop, test, and release software more efficiently and with fewer errors.
+
+However, despite their critical role, CI servers are often overlooked as potential attack vectors within an organisation's cloud infrastructure. This oversight can lead to significant security vulnerabilities, potentially resulting in data breaches, service disruptions, and reputational damage.
+
+In their effort to provide a seamless Developer Experience (DevX), organisations often grant elevated permissions to CI servers; this allows developers to access various environments and resources without consulting external teams. While this autonomy enhances productivity and accelerates development, it also increases the risk of misuse and makes the infrastructure more vulnerable to attacks.
+
+## The Overlooked Vulnerability of CI Servers
+
+Organisations often overlook CI servers as significant security risks within their cloud infrastructure. This oversight stems from several common misconceptions and practices that inadvertently introduce vulnerabilities.
+
+Firstly, credentials used by CI servers are commonly static and possess broad permissions. These credentials must support various jobs, from code integration to deployment, necessitating wide-ranging access. However, these credentials' static nature and extensive permissions make them prime targets for attackers. If these credentials are compromised, attackers can gain substantial access to the organisation's cloud infrastructure.
+
+Secondly, it's a prevalent pattern for repositories to identify the services they represent through manifest or configuration files. These files often contain sensitive information, including service names, capabilities, and sometimes access tokens or keys. These patterns make it easy for attackers to impersonate services within other repositories on which they have more permissive permissions.
+
+Moreover, permissions and access levels within CI environments are frequently left open, assuming all developers are good actors and their computers will never be compromised. This assumption can lead to a false sense of security. In reality, if a developer's machine is compromised or a malicious insider gains access, the open permissions can be misused to infiltrate the system further.
+
+These practices collectively make CI servers an attractive target for attackers. Ignoring the security of CI servers can lead to severe consequences, including data breaches, unauthorised access to sensitive information, and disruption of services. It is crucial to address these vulnerabilities by implementing robust security measures, continuously monitoring for suspicious activities, and regularly updating and rotating credentials or removing them altogether.
+
+## Overlooked Attack Vectors
+
+CI servers can be exploited through various attack vectors, taking advantage of their elevated permissions and integration with numerous development and deployment pipeline components. Two commonly overlooked attack vectors are service and job impersonation.
+
+Both attack vectors build upon the same vulnerability common for repositories and jobs to identify themselves through configuration files or environment variables. It's common to assume that only the specific repositories will identify themselves as particular services, but when abused, it can open up a lot of capabilities to the attacker.
+
+Automation scripts commonly use these configuration files as inputs to construct specific identifiers, such as the name of the image to be published, the database used during a migration, or the role assumed within an environment for deployment purposes.
+
+Furthermore, it's common to assume the environment name or identification of the particular job to be defined via environment variables mapped to branch names or stages in a specific deployment pipeline.
+
+When these patterns are implemented and trusted, attackers can fork repositories and create instances they have elevated access to, allowing them to publish compromised versions of the service, access data via migration stages of pipelines, or destroy infrastructure, causing service outages and data loss.
+
+Some attacks also do not require repository clones; instead, they abuse the ability to create branches and override particular environment variables to gain access to production environments or databases.
+
+## Mitigation Strategies
+
+Implementing robust authorisation and access control mechanisms is crucial to mitigate the risks associated with service and job impersonation and their potential attack vectors. Solutions like OpenID Connect (OIDC) and IAM Roles offer practical ways to secure CI environments by shifting the identification and authentication processes to minimise vulnerabilities.
+OpenID Connect (OIDC) and IAM Roles
+OpenID Connect (OIDC) is an identity layer built on top of the OAuth 2.0 protocol, providing a streamlined way to handle authentication. When implemented correctly, OIDC can significantly enhance the security of CI instances by controlling authorisation and access in a more secure and manageable way. Here's how:
+
+**Repository Identification:** Integrating OIDC ties the identification of services to the repository name, including its namespace, which inherently is unique within the CI instance; as a result, only one instance of each service can exist, reducing the risk of impersonation and unauthorised access.
+
+**Job Identification:** The internals of the CI instance itself identify and authenticate jobs. This ensures that the permissions awarded to the particular job are tightly coupled with the associated repository, stage, job and context of the target environment.
+
+**Least Privileged Access:** When OIDC is tightly integrated with IAM Roles via the use of Conditions, you can precisely control the level of access granted within an environment based on the service, repository, job and environment in the request context.
+
+## Conclusion
+
+Continuous Integration (CI) servers are critical yet often underestimated components of cloud infrastructure, primarily automating development processes but also exposing organisations to security vulnerabilities like service and job impersonation. Implementing security frameworks such as OpenID Connect (OIDC) and Identity Access Management (IAM) roles is essential for enhancing security by enforcing identification protocols and the principle of least privilege.
+
+Security is an ongoing commitment that necessitates continual monitoring and adaptation to technological changes and emerging threats. By maintaining rigorous security practices, organisations can protect their CI environments, ensuring the reliability and integrity of their operational processes.
