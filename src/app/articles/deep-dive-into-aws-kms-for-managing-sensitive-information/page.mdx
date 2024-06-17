@@ -1,0 +1,126 @@
+import { ArticleLayout } from '@/components/ArticleLayout'
+
+export const article = {
+  author: 'Max',
+  date: '2024-07-04',
+  title: 'Deep Dive: AWS KMS for Managing Sensitve Information',
+  description:
+    'My time building a green-field global financial services company allowed me to invest much time in thinking & developing how to manage sensitive information; this artcile deep dives into some of those learnings.',
+}
+
+export const metadata = {
+  title: article.title,
+  description: article.description,
+}
+
+export default (props) => <ArticleLayout article={article} {...props} />
+
+## Introduction
+
+As businesses increasingly migrate to the cloud, data security measures are evolving to safeguard sensitive information. The shift from traditional security frameworks to advanced cloud-based solutions significantly transforms how data is protected in today's digital landscape. Among the leading technologies in this space, Amazon Web Services (AWS) Key Management Service (KMS) stands out as a robust tool designed to manage cryptographic keys and ensure data security.
+
+AWS KMS enables organisations to easily create and control the encryption keys to encrypt their data and provides integrated support to ensure they are used securely. This service extends beyond mere encryption; it facilitates finely-tuned authorisation mechanisms for handling particularly sensitive information. Through advanced features like encryption context and encryption grants, AWS KMS offers nuanced control over who can access data and how access is granted.
+
+Furthermore, integrating AWS KMS with AWS CloudTrail for monitoring ensures that all key usage is transparent and auditable. This functionality is crucial for maintaining compliance with regulatory requirements and providing clear trails of data access and use.
+
+This article will explore how AWS KMS works, particularly its use of encryption context and encryption grants. We will explore how these features enhance security and compliance, providing practical insights and guidance on leveraging AWS KMS for sensitive data management. Whether you are a business leader looking to bolster your organisation's data security or a senior engineer tasked with implementing secure systems, understanding AWS KMS is essential in today's cybersecurity landscape.
+
+## Understanding AWS KMS
+
+Amazon Web Services (AWS) Key Management Service (KMS) is a managed service designed to simplify the creation and management of cryptographic keys used for data encryption. It offers a secure way to handle sensitive data in the cloud.
+
+### Key Features
+
+- Users can create, manage, and utilise encryption keys.
+- It integrates seamlessly with other AWS services, ensuring encrypted data across AWS is protected.
+
+### How it works
+
+AWS KMS revolves around customer master keys (CMKs), used to generate data keys for encrypting and decrypting data. The service supports both automated and manual key rotation to enhance security.
+
+### Benefits
+
+Utilising AWS KMS provides enhanced security through strong encryption standards, scalable key management, user-friendly interfaces, and cost efficiency by automating critical security tasks.
+
+## Encryption Context in AWS KMS
+
+The encryption context in AWS Key Management Service (KMS) is a critical feature that enhances security by adding additional data layers to the encryption and decryption processes. This context acts as metadata for the cryptographic operations, providing essential security benefits and usage flexibility.
+
+### How it works
+
+An encryption context is a set of key-value pairs AWS KMS uses as additional authenticated data (AAD) during cryptographic operations. This AAD is crucial because it provides an extra layer of security that is checked during the encryption and decryption processes. By requiring that the same encryption context used during encryption be present and match precisely during decryption, AWS KMS ensures that the encrypted data cannot be misused or wrongly decrypted, even if intercepted.
+
+### Key Features
+
+- It helps prevent unauthorised data access by ensuring that the encryption and decryption requests include matching contexts.
+- Using different encryption contexts for various data sets, developers can enforce more specific access policies, effectively limiting who can decrypt data based on the context provided.
+- AWS CloudTrail logs the encryption context, allowing detailed monitoring of how and when data is accessed.
+
+## Encryption Grants
+
+Encryption grants in AWS Key Management Service (KMS) are permissions that allow fine-grained control over who can use cryptographic keys and how. These grants are vital for precise access management to encrypted data, ensuring that only authorised personnel and systems can execute specific cryptographic actions.
+
+### Key Features
+
+- Grants define access to specific operations like Encrypt, Decrypt, or GenerateDataKey.
+- They can be configured to expire, providing temporary key access for heightened security needs.
+- Grant activities are recorded in AWS CloudTrail, allowing detailed auditing of usage.
+
+### How it works compared to IAM roles
+
+Encryption grants and AWS IAM roles and policies both manage permissions within AWS environments but serve distinct purposes and operate differently:
+
+- IAM roles and policies manage broad permissions across AWS services, such as launching instances or accessing S3 buckets. In contrast, encryption grants precise control of cryptographic operations with AWS KMS, offering a focused layer of security for key management.
+- Encryption grants provide precise control over specific vital actions and can be configured to expire. This granularity and temporary access are especially useful for short-term projects or temporary employees, features not typically available with IAM policies.
+- Encryption grants uniquely enforce conditions based on cryptographic parameters, like the encryption context. This allows for advanced control strategies, such as permitting decryption only when the encryption context meets specific criteria, a capability beyond the scope of standard IAM policies.
+
+## Integration with AWS CloudTrail
+
+AWS CloudTrail is critical in enhancing the security and compliance of AWS Key Management Service (KMS) by providing detailed logging and tracking of key usage. This integration is essential for monitoring access and ensuring that all cryptographic operations are transparent and accountable.
+
+### How it works
+
+CloudTrail captures all API calls to AWS KMS, including key management actions and usage events. This logging includes details such as who accessed the key, what action was performed, and when it occurred. These logs are invaluable for security audits and real-time monitoring.
+
+### Benefits
+
+Every use of a cryptographic key, encryption context, and associated grants is logged.
+Logs provide evidence of compliance with internal policies and regulatory standards, making it easier to address audits and investigations.
+Detailed activity logs help quickly identify and respond to unauthorised or unexpected key usage.
+
+## Practical Example: Managing PII in a Financial System
+
+To illustrate how AWS KMS, encryption contexts, encryption grants, and AWS CloudTrail can work together to secure sensitive data, consider a hypothetical financial institution that handles its clients' personally identifiable information (PII). This example will detail the steps to encrypt PII, manage access through grants, and monitor operations with CloudTrail, ensuring compliance and security.
+
+### Scenario Overview
+
+Assume our financial institution is required by regulations to securely handle and store customer PII, including sensitive data like driver's license numbers. The system must ensure that only authorised applications and roles can access specific types of data.
+
+### 1. Encrypting values:
+
+- Each piece of PII, such as a driver's license number, is encrypted using AWS KMS. During encryption, an encryption context is added. This context includes details about the customer and the data type, such as `{"customerID": "12345", "dataType": "DriverLicense"}`.
+- This context ensures that the encrypted data can only be decrypted when the same context is provided, linking the decryption process directly to the specific data and customer.
+
+### 2. Assigning Encryption Grants:
+
+- Specific applications or roles within the organisation are granted permission to encrypt driver's licenses. For instance, the customer onboarding application might receive an encryption grant that allows it to encrypt new customers' driver's licenses.
+- A separate set of grants is created for decryption. For example, the CKY application might have the grant to decrypt a driver's license for verification purposes when issuing loans.
+
+### 3. Monitoring and Auditing:
+
+- All encryption and decryption requests and their contexts are logged in AWS CloudTrail. This logging provides a complete audit trail of who accessed the data, when, and under what conditions.
+- The organisation sets up CloudTrail to alert the security team if data is attempted to encrypt or decrypt without proper authorisation, enhancing security response and incident management.
+
+### 4. Protecting data corruption:
+
+- The encryption context plays a critical role in data governance. For instance, it prevents encrypted data associated with Customer A from being wrongly decrypted under Customer B's profile, as the mismatch in customer IDs in the encryption context would block unauthorised decryption.
+
+## Conclusion
+
+AWS Key Management Service (KMS) provides robust security measures integral for managing sensitive data in the cloud through its sophisticated features, such as encryption context and encryption grants.
+
+As organisations continue to face stringent regulatory requirements, the role of cloud encryption and key management becomes increasingly vital. AWS KMS not only helps secure data but also ensures that access is transparent and auditable, crucial for adhering to compliance standards.
+
+### Looking Ahead
+
+In future articles, I will explore how the AWS KMS implementation can be extended to support specific regulatory requirements, such as those imposed by the General Data Protection Regulation (GDPR). We'll dive into how the encryption and key management strategies facilitated by AWS KMS can help organisations meet GDPR's strict data protection rules, ensuring that personal data is handled securely and in compliance with European law. Stay tuned for deeper insights into leveraging cloud security technologies to enhance data privacy and regulatory compliance.
