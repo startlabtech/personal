@@ -237,7 +237,7 @@ export default async function Home() {
             Engineer, creator, and explorer of digital frontiers.
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            Hi there! I&apos;m Max, an engineering who thrives on simplifying
+            Hi there! I&apos;m Max, an engineer who thrives on simplifying
             complex challenges. Away from the keyboard, I&apos;m carving the
             slopes as a skier, crafting memories as a father, and trying to
             shape wood into furniture.
